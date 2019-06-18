@@ -26,6 +26,7 @@ classdef Connection < handle
             % specify the connection to the database.
             % initQuery is the SQL query to be executed at the start
             % of each new session.
+            setupDJ(true);
             try
                 mymVersion = mym('version');
                 assert(mymVersion.major > 2 || mymVersion.major==2 && mymVersion.minor>=6)
@@ -151,7 +152,7 @@ classdef Connection < handle
                     error 'Server disconnected during a transaction'
                 end
             end
-        end
+       end
         
         
         function ret = query(self, queryStr, varargin)
@@ -159,7 +160,7 @@ classdef Connection < handle
             % SQL query and return the result if any.
             % The same connection is re-used by all DataJoint objects.
             if ~self.isConnected
-                self.connId=mym('open', self.host, self.user, self.password);
+                self.connId=mym(-1, 'open', self.host, self.user, self.password);
                 if ~isempty(self.initQuery)
                     self.query(self.initQuery);
                 end
